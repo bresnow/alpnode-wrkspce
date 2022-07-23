@@ -12,6 +12,7 @@ More machine resources available for your project.
 ## Base Workspace includes:
 - Zsh, Oh my Zsh
 - Node
+- Python3, pp
 - curl, wget
 - Git: git, git-flow, lazygit
 - File browsers: mc, [Filebrowser](https://github.com/filebrowser/filebrowser)
@@ -30,7 +31,7 @@ All CLI programs accessable via [Web Terminal](https://github.com/tsl0922/ttyd)
 ## Runtime
 
 ```
-docker run --rm -p 8046:8026 -p 8041:8021 bresnow/alpnode-wrkspce:16-base -n space
+docker run --rm -p 8046:8026 -p 8041:8021 bresnow/alpnode-wrkspce:base -n space
 ```
 
 ## Additional Packages
@@ -38,7 +39,7 @@ docker run --rm -p 8046:8026 -p 8041:8021 bresnow/alpnode-wrkspce:16-base -n spa
 If you wanted to install additional packages and build your own image based upon this one you'd start your Dockerfile like this:
 
 ```
-FROM bresnow/alpnode-wrkspce:16-base
+FROM bresnow/alpnode-wrkspce:base
 
 RUN apk -add U -v package_name package_name
 
