@@ -1,28 +1,28 @@
 {
-    "port": 8021,
-    "baseURL": "",
-    "address": "0.0.0.0",
-    "log": "stdout",
-    "database": "/opt/filebrowser/database.db",
-    "root": "/home/16SCORE&13",
-    "allowEdit": true,
-    "allowNew": true,
-    "allowCommands": true,
-    "commands": [
-        "apt",
-        "ls",
-        "cd",
-        "rm",
-        "cp",
-        "mv",
-        "cat",
-        "echo",
-        "tar",
-        "zip",
-        "unzip"
-    ],
-    "noAuth": true,
-    "auth": {
-        "method": "noauth"
-    }
+  "port": 8021,
+  "baseURL": "",
+  "address": "0.0.0.0",
+  "log": "stdout",
+  "database": "/opt/filebrowser/database.db",
+  "root": "/home/16SCORE&13",
+  "allowEdit": true,
+  "allowNew": true,
+  "allowCommands": true,
+  "commands": [
+    "apt",
+    "ls",
+    "cd",
+    "rm",
+    "cp",
+    "mv",
+    "cat",
+    "echo",
+    "tar",
+    "zip",
+    "unzip"
+  ],
+  "noAuth": true,
+  "auth": {
+    "method": "noauth"
+  }
 }

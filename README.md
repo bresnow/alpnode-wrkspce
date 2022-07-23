@@ -2,14 +2,14 @@
 
 ![TYD](images/ttyd.png)
 
-Inspired by [Bluxmit's Alnoda Workspaces](https://github.com/bluxmit/alnoda-workspaces). I wanted to build the tiniest possible nodejs cloud workspace. Trimmed the fat by reducing redundant and/or unneeded  programs, apps, users and runtimes. However, still with an intuitive and *comfortable* workflow. 
+Inspired by [Bluxmit's Alnoda Workspaces](https://github.com/bluxmit/alnoda-workspaces). I wanted to build the tiniest possible nodejs cloud workspace. Trimmed the fat by reducing redundant and/or unneeded programs, apps, users and runtimes. However, still with an intuitive and _comfortable_ workflow.
 
-Alnoda Ubuntu/base workspaces average ~1-3GB after the container build step *(...still a really **awesome** project)*. Alpnode base workspace is ~300MB after build.
-More machine resources available for your project. 
+Alnoda Ubuntu/base workspaces average ~1-3GB after the container build step _(...still a really **awesome** project)_. Alpnode base workspace is ~300MB after build. Dive analysis shows an image efficiency score of 96%.
 
-![SizeMatters](images/size.png)
+![Dive](images/dive.png)
 
 ## Base Workspace includes:
+
 - Zsh, Oh my Zsh
 - Node
 - Python3, pp
@@ -20,7 +20,7 @@ More machine resources available for your project.
 - htop
 - supervisord
 - cron
-- dmidecode (Must run with ```--privileged```)
+- dmidecode (Must run with `--privileged`)
 
 ![FileBrowser](images/filebrowser.png)
 
@@ -45,9 +45,10 @@ RUN apk -add U -v package_name package_name
 
 ...
 ```
+
 ## More/ TODOs
 
-I will be adding more and updating the repo regularly. 
+I will be adding more and updating the repo regularly.
 
 - [ ] Traefik reverse proxy with compose/swarm config.
 - [ ] IDE workspaces / Codespaces alternative
