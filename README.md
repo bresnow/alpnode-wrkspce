@@ -4,7 +4,7 @@
 
 Inspired by [Bluxmit's Alnoda Workspaces](https://github.com/bluxmit/alnoda-workspaces). I wanted to build the tiniest possible nodejs cloud workspace. Trimmed the fat by reducing redundant and/or unneeded programs, apps, users and runtimes. However, still with an intuitive and _comfortable_ workflow.
 
-Alnoda Ubuntu/base workspaces average ~1-3GB after the container build step _(...still a really **awesome** project)_. Alpnode base workspace is ~300MB after build. Dive analysis shows an image efficiency score of 96%.
+Alnoda (Bluxmit) Ubuntu/base workspaces average ~1-3GB after the container build step _(...still a really **awesome** project)_. **AlpNode** base workspace is ~300MB after build. Dive analysis shows an image efficiency score of 96%.
 
 ![Dive](images/dive.png)
 
@@ -12,7 +12,7 @@ Alnoda Ubuntu/base workspaces average ~1-3GB after the container build step _(..
 
 - Zsh, Oh my Zsh
 - Node
-- Python3, pp
+- Python3, pip
 - curl, wget
 - Git: git, git-flow, lazygit
 - File browsers: mc, [Filebrowser](https://github.com/filebrowser/filebrowser)
