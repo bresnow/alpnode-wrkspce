@@ -14,7 +14,7 @@ More machine resources available for your project.
 - Node
 - curl, wget
 - Git: git, git-flow, lazygit
-File browsers: mc, [Filebrowser](https://github.com/filebrowser/filebrowser)
+- File browsers: mc, [Filebrowser](https://github.com/filebrowser/filebrowser)
 - vim
 - htop
 - supervisord
