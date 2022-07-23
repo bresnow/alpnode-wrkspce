@@ -30,7 +30,7 @@ All CLI programs accessable via [Web Terminal](https://github.com/tsl0922/ttyd)
 ## Runtime
 
 ```
-docker run --rm --privileged -p 8046:8026 -p 8041:8021 --privileged bresnow/alpnode-wrkspce:16-base -n space
+docker run --rm -p 8046:8026 -p 8041:8021 bresnow/alpnode-wrkspce:16-base -n space
 ```
 
 ## Additional Packages
