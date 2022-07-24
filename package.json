@@ -1,6 +1,6 @@
 {
   "name": "alpnode-wrkspce",
-  "version": "1.0.1",
+  "version": "1.0.4",
   "description": "Containerized development, sys admin, and creative professional vm-like environments",
   "main": "index.mjs",
   "repository": "https://github.com/bresnow/alpnode-wrkspce.git",

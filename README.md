@@ -50,6 +50,6 @@ RUN apk -add U -v package_name package_name
 
 I will be adding more and updating the repo regularly.
 
-- [ ] Traefik reverse proxy with compose/swarm config.
+- [x] Traefik reverse proxy with compose/swarm config.
 - [ ] IDE workspaces / Codespaces alternative
 - [ ] Customization config setup to deploy white-label apps
