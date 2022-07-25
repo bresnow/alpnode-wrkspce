@@ -8,7 +8,7 @@ services:
         constraints:
           - node.role == manager
       labels:  
-
+        - traefik.http.middlewares.admin-auth.basicauth.users=${USERNAME?Variable not set}:${HASHED_PASSWORD?Variable not set}
         - traefik.enable=true
         - traefik.docker.network=traefik-public
         - traefik.constraint-label=traefik-public
@@ -24,6 +24,7 @@ services:
         - traefik.http.routers.ttyd.tls.certresolver=le
         # CONTAINER PORT
         - traefik.http.services.ttyd.loadbalancer.server.port=8026
+        - traefik.http.routers.ttyd.middlewares=basic-auth
               #-------------------FILE SHARE
         # SERVICE NAME
         - traefik.http.routers.filebrowser.service=filebrowser
@@ -37,12 +38,13 @@ services:
         - traefik.http.routers.filebrowser.tls.certresolver=le
         # CONTAINER PORT
         - traefik.http.services.filebrowser.loadbalancer.server.port=8021
+        - traefik.http.routers.filebrowser.middlewares=basic-auth
     networks:
       - traefik-public
     volumes:
-      - 16score13_band_data:/home
+      - ${MOUNT_PATH}data:/home
 volumes:
-  16score13_band_data:
+  data:
 
 networks:
   traefik-public:
