@@ -7,44 +7,39 @@ services:
       placement:
         constraints:
           - node.role == manager
-      labels:  
-        - traefik.http.middlewares.admin-auth.basicauth.users=${USERNAME?Variable not set}:${HASHED_PASSWORD?Variable not set}
+      labels:
         - traefik.enable=true
         - traefik.docker.network=traefik-public
         - traefik.constraint-label=traefik-public
         #-------------------WEB TERMINAL
-        # SERVICE NAME
+        - traefik.http.routers.ttyd-http.rule=Host(`${TTYD_DOMAIN:?SET YOUR VARIABLES}`)
+        - traefik.http.routers.ttyd-http.entrypoints=http
+        - traefik.http.routers.ttyd-http.middlewares=https-redirect
+        - traefik.http.routers.ttyd-https.rule=Host(`${TTYD_DOMAIN:?SET YOUR VARIABLES}`)
+        - traefik.http.routers.ttyd-https.entrypoints=https
         - traefik.http.routers.ttyd.service=ttyd
-        # SERVICE ENTRYPOINTS
-        - traefik.http.routers.ttyd.entrypoints=https
-        # DOMAIN 
-        - traefik.http.routers.ttyd.rule=Host(`${TTYD_DOMAIN:?SET YOUR VARIABLES}`)
-        # TLS CERTS
-        - traefik.http.routers.ttyd.tls=true
-        - traefik.http.routers.ttyd.tls.certresolver=le
-        # CONTAINER PORT
+        - traefik.http.routers.ttyd-https.tls=true
+        - traefik.http.routers.ttyd-https.tls.certresolver=le
         - traefik.http.services.ttyd.loadbalancer.server.port=8026
-        - traefik.http.routers.ttyd.middlewares=basic-auth
-              #-------------------FILE SHARE
-        # SERVICE NAME
+        - traefik.http.routers.ttyd.middlewares=admin-auth
+
+          #-------------------FILE SHARE
+        - traefik.http.routers.filebrowser-http.rule=Host(`${FILEBROWSER_DOMAIN:?SET YOUR VARIABLES}`)
+        - traefik.http.routers.filebrowser-http.entrypoints=http
+        - traefik.http.routers.filebrowser-http.middlewares=https-redirect
+        - traefik.http.routers.filebrowser-https.rule=Host(`${FILEBROWSER_DOMAIN:?SET YOUR VARIABLES}`)
+        - traefik.http.routers.filebrowser-https.entrypoints=https
         - traefik.http.routers.filebrowser.service=filebrowser
-        # SERVICE ENTRYPOINTS
-        - traefik.http.routers.filebrowser.entrypoints=https
-    
-        # DOMAIN
-        - traefik.http.routers.filebrowser.rule=Host(`${FILEBROWSER_DOMAIN:?SET YOUR VARIABLES}`)
-        # TLS CERTS
-        - traefik.http.routers.filebrowser.tls=true
-        - traefik.http.routers.filebrowser.tls.certresolver=le
-        # CONTAINER PORT
+        - traefik.http.routers.filebrowser-https.tls=true
+        - traefik.http.routers.filebrowser-https.tls.certresolver=le
         - traefik.http.services.filebrowser.loadbalancer.server.port=8021
-        - traefik.http.routers.filebrowser.middlewares=basic-auth
+        - traefik.http.routers.filebrowser.middlewares=admin-auth
     networks:
       - traefik-public
     volumes:
-      - ${MOUNT_PATH}data:/home
+      - 16score13_data:/home
 volumes:
-  data:
+  16score13_data:
 
 networks:
   traefik-public:

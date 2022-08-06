@@ -8,7 +8,7 @@ Alnoda (Bluxmit) Ubuntu/base workspaces average ~1-3GB after the container build
 
 ![Dive](images/dive.png)
 
-## Base Workspace includes:
+## Base Workspace Include:
 
 - Zsh, Oh my Zsh
 - Node
@@ -51,5 +51,5 @@ RUN apk -add U -v package_name package_name
 I will be adding more and updating the repo regularly.
 
 - [x] Traefik reverse proxy with compose/swarm config.
-- [ ] IDE workspaces / Codespaces alternative
+- [x] IDE workspaces / Codespaces alternative
 - [ ] Customization config setup to deploy white-label apps

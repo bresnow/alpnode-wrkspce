@@ -1,0 +1,62 @@
+version: "3.3"
+
+services:
+  ide:
+    image: ${IMAGE:-bresnow/alpnode-wrkspce}:${VERSION:-code}
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network=traefik-public
+        - traefik.constraint-label=traefik-public
+
+                #-------------------Code-Server
+        - traefik.http.routers.codeserver-cnxt.rule=Host(`sys.code.cnxt.app`)
+        - traefik.http.routers.codeserver-cnxt.entrypoints=http
+        - traefik.http.routers.codeserver-cnxt.middlewares=https-redirect
+        - traefik.http.routers.codeserver-cnxt-https.rule=Host(`sys.code.cnxt.app`)
+        - traefik.http.routers.codeserver-cnxt-https.entrypoints=https
+        - traefik.http.routers.codeserver-cnxt-https.service=codeserver-cnxt
+        - traefik.http.routers.codeserver-cnxt-https.tls=true
+        - traefik.http.routers.codeserver-cnxt-https.tls.certresolver=le
+        - traefik.http.services.codeserver-cnxt.loadbalancer.server.port=8025
+        # - traefik.http.routers.codeserver.middlewares=admin-auth
+        #-------------------WEB TERMINAL
+        - traefik.http.routers.ttyd-cnxt.rule=Host(`sys.term.cnxt.app`)
+        - traefik.http.routers.ttyd-cnxt.entrypoints=http
+        - traefik.http.routers.ttyd-cnxt.middlewares=https-redirect
+        - traefik.http.routers.ttyd-cnxt-https.rule=Host(`sys.term.cnxt.app`)
+        - traefik.http.routers.ttyd-cnxt-https.entrypoints=https
+        - traefik.http.routers.ttyd-cnxt-https.service=ttyd-cnxt
+        - traefik.http.routers.ttyd-cnxt-https.tls=true
+        - traefik.http.routers.ttyd-cnxt-https.tls.certresolver=le
+        - traefik.http.services.ttyd-cnxt.loadbalancer.server.port=8026
+        # # # - traefik.http.routers.ttyd.middlewares=admin-auth
+
+        #   #-------------------FILE SHARE
+        - traefik.http.routers.filebrowser-cnxt.rule=Host(`sys.file.cnxt.app`)
+        - traefik.http.routers.filebrowser-cnxt.entrypoints=http
+        - traefik.http.routers.filebrowser-cnxt.middlewares=https-redirect
+        - traefik.http.routers.filebrowser-cnxt-https.rule=Host(`sys.file.cnxt.app`)
+        - traefik.http.routers.filebrowser-cnxt-https.entrypoints=https
+        - traefik.http.routers.filebrowser-cnxt-https.service=filebrowser-cnxt
+        - traefik.http.routers.filebrowser-cnxt-https.tls=true
+        - traefik.http.routers.filebrowser-cnxt-https.tls.certresolver=le
+        - traefik.http.services.filebrowser-cnxt.loadbalancer.server.port=8021
+        # - traefik.http.routers.filebrowser.middlewares=admin-auth
+        # - traefik.http.routers.${PROJECT:-project}.middlewares=admin-auth
+    networks:
+      - traefik-public
+    volumes:
+      - codeserver_data:/home
+volumes:
+  codeserver_data:
+    driver: local-persist
+    driver_opts:
+      mountpoint: /home/bresnow/codeserver_data
+
+networks:
+  traefik-public:
+    external: true

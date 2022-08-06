@@ -1,1 +1,0 @@
-FROM bresnow/alpnode-wrkspc:base
