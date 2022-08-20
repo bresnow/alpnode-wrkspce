@@ -2,7 +2,9 @@ version: "3.3"
 
 services:
   ide:
-    image: ${IMAGE:-bresnow/alpnode-wrkspce}:${VERSION:-code}
+    image: bresnow/alpnode_code_workspace:latest
+    ports:
+      - 8021:8021
     deploy:
       placement:
         constraints:

@@ -1,11 +1,11 @@
 #!/usr/bin/bash
 
-if [ -n "${PASSWORD}" ] || [ -n "${HASHED_PASSWORD}" ]; then
-    AUTH="password"
-else
-    AUTH="none"
-    echo "starting with no password"
-fi
+# if [ -n "${PASSWORD}" ] || [ -n "${HASHED_PASSWORD}" ]; then
+#     AUTH="password"
+# else
+#     AUTH="none"
+#     echo "starting with no password"
+# fi
 
 if [ -z ${PROXY_DOMAIN+x} ]; then
     PROXY_DOMAIN_ARG=""
@@ -20,6 +20,6 @@ code-server \
     --user-data-dir /opt/vscode/data \
     --extensions-dir /opt/vscode/extensions \
     --disable-telemetry \
-    --auth "${AUTH}" \
+    --auth "none" \
     "${PROXY_DOMAIN_ARG}" \
-    /home/project
+    ${HOME}

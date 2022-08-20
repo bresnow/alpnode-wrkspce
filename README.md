@@ -31,7 +31,7 @@ All CLI programs accessable via [Web Terminal](https://github.com/tsl0922/ttyd)
 ## Runtime
 
 ```
-docker run --rm -p 8046:8026 -p 8041:8021 bresnow/alpnode-wrkspce:base -n space
+docker run --rm -p 8026:8026 -p 8021:8021 bresnow/alpnode_base_workspace -n space
 ```
 
 ## Additional Packages
@@ -39,7 +39,7 @@ docker run --rm -p 8046:8026 -p 8041:8021 bresnow/alpnode-wrkspce:base -n space
 If you wanted to install additional packages and build your own image based upon this one you'd start your Dockerfile like this:
 
 ```
-FROM bresnow/alpnode-wrkspce:base
+FROM bresnow/alpnode_base_workspace:latest
 
 RUN apk -add U -v package_name package_name
 

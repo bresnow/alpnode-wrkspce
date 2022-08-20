@@ -1,18 +1,30 @@
 
-FROM mhart/alpine-node:16
+ARG NODE_VERSION=16
+FROM mhart/alpine-node:${NODE_VERSION}
+# default passwd = "admin"
+ENV HASHED_PASSWORD="$apr1$a8qQev8c$pDHbsZlGx5.Eo2G6f59Ek1" 
+ENV FILEBROWSER_PORT=8021
+ENV TTYD_PORT=8026
+ENV DIRECTORY=main
+# lazygit version
+ENV LGV=0.35
+# filebrowser version
+ENV FBV=2.22.4
+# web terminal version
+ENV TV=1.7.1
 
 COPY unified-supervisord.conf supervisord.conf /etc/supervisord/
 COPY zsh-in-docker.sh /tmp/zsh-in-docker.sh
-COPY filebrowser.json /opt/filebrowser/filebrowser.json
+COPY filebrowser.json /opt/filebrowser/database.json
+COPY database.db /opt/filebrowser/database.db
+COPY branding /branding
+VOLUME [ "/branding" ]
 
 RUN apk upgrade --no-cache -U && \
     apk add --no-cache curl zip gzip tar py-pip python3 supervisor openrc vim git-flow git mc grep dmidecode htop 
-ENV DIR 16SCORE&13
-ENV LAZYGIT_VERSION 0.34
-ENV FILEBROWSER_VERSION v2.22.4
 RUN  echo "------------------------------------------------------ GIT" \
-    && wget -P /tmp https://github.com/jesseduffield/lazygit/releases/download/v0.34/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz \
-    && mkdir /tmp/lazygit  && tar -xzf /tmp/lazygit_0.34_Linux_x86_64.tar.gz --directory /tmp/lazygit \
+    && wget -P /tmp https://github.com/jesseduffield/lazygit/releases/download/v${LGV}/lazygit_${LGV}_Linux_x86_64.tar.gz \
+    && mkdir /tmp/lazygit  && tar -xzf /tmp/lazygit_${LGV}_Linux_x86_64.tar.gz --directory /tmp/lazygit \
     && chmod +x /tmp/lazygit/lazygit \
     && mv /tmp/lazygit/lazygit /usr/bin/ \
     && echo "------------------------------------------------------ Supervisor" \
@@ -21,11 +33,11 @@ RUN  echo "------------------------------------------------------ GIT" \
     && mkdir -p /var/log/supervisord/ \
     && echo "------------------------------------------------------ File browsers: Xplr" \
     && wget -P /tmp https://github.com/sayanarijit/xplr/releases/download/v0.17.6/xplr-linux.tar.gz \
-    && \mkdir /tmp/xplr  && tar -xzf /tmp/xplr-linux.tar.gz --directory /tmp/xplr \
+    && mkdir /tmp/xplr  && tar -xzf /tmp/xplr-linux.tar.gz --directory /tmp/xplr \
     && chmod +x /tmp/xplr/xplr \
     && mv /tmp/xplr/xplr /usr/bin/ \
     && echo "------------------------------------------------------ Filebrowser" \
-    && cd /tmp && wget https://github.com/filebrowser/filebrowser/releases/download/${FILEBROWSER_VERSION}/linux-amd64-filebrowser.tar.gz \
+    && cd /tmp && wget https://github.com/filebrowser/filebrowser/releases/download/v${FBV}/linux-amd64-filebrowser.tar.gz \
     && mkdir -p /tmp/filebrowser \
     && tar xvf /tmp/linux-amd64-filebrowser.tar.gz -C /tmp/filebrowser \
     && mv /tmp/filebrowser/filebrowser /opt/filebrowser \
@@ -33,13 +45,13 @@ RUN  echo "------------------------------------------------------ GIT" \
     && mkdir -p /var/log/filebrowser/ \
     && mkdir -p /home/store \
     && echo "------------------------------------------------------ Web-based terminal" \
-    && cd /tmp && wget https://github.com/tsl0922/ttyd/releases/download/1.6.3/ttyd.x86_64 \
+    && cd /tmp && wget https://github.com/tsl0922/ttyd/releases/download/${TV}/ttyd.x86_64 \
     && mv ttyd.x86_64 /usr/bin/ttyd \
     && chmod +x /usr/bin/ttyd \
     && echo "------------------------------------------------------ ZSH" \
     && chmod +x /tmp/zsh-in-docker.sh \
-    && mkdir -p /home/${DIR} \
-    && HOME=/home/${DIR} \
+    && mkdir -p /home/${DIRECTORY} \
+    && HOME=/home/${DIRECTORY} \
     && /tmp/zsh-in-docker.sh \
     -t https://github.com/pascaldevink/spaceship-zsh-theme \
     -a 'DISABLE_UPDATE_PROMPT="true"' \
@@ -48,11 +60,11 @@ RUN  echo "------------------------------------------------------ GIT" \
     -a 'export LS_COLORS="$LS_COLORS:ow=1;34:tw=1;34:"' \
     -a 'SPACESHIP_USER_SHOW="false"' \
     -a 'SPACESHIP_TIME_SHOW="false"' \
-    -a 'SPACESHIP_DIR_COLOR="cyan"' \
+    -a 'SPACESHIP_DIRECTORY_COLOR="cyan"' \
     -a 'SPACESHIP_GIT_SYMBOL="【 ɢɪᴛ 】"' \
     -a 'SPACESHIP_BATTERY_SHOW="false"' \
-    -a 'if [[ $(pwd) != /home/${DIR}  ]]; then cd /home/${DIR}; fi  # Set starting dir to /home/${DIR} ' \
-    -a 'hash -d p=/home/${DIR}' \
+    -a 'if [[ $(pwd) != /home/${DIRECTORY}  ]]; then cd /home/${DIRECTORY}; fi  # Set starting dir to /home/${DIRECTORY} ' \
+    -a 'hash -d p=/home/${DIRECTORY}' \
     -p git \
     -p https://github.com/zsh-users/zsh-autosuggestions \
     -p https://github.com/zsh-users/zsh-completions \
@@ -64,7 +76,7 @@ RUN  echo "------------------------------------------------------ GIT" \
     -a 'bindkey "\$terminfo[kcud1]" history-substring-search-down' \
     && rm /tmp/zsh-in-docker.sh 
 
-ENV HOME=/home/${DIR}
+ENV HOME=/home/${DIRECTORY}
 ENV PATH="${HOME}/.local/bin:/opt/filebrowser:${PATH}"
 
 RUN rm -rf /var/cache/apk/*  /sbin/halt /sbin/poweroff /sbin/reboot &&  \
