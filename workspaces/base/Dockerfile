@@ -16,7 +16,7 @@ ENV TV=1.7.1
 COPY unified-supervisord.conf supervisord.conf /etc/supervisord/
 COPY zsh-in-docker.sh /tmp/zsh-in-docker.sh
 COPY filebrowser.json /opt/filebrowser/database.json
-COPY database.db /opt/filebrowser/database.db
+COPY database.db /opt/filebrowser_db/database.db
 COPY branding /branding
 VOLUME [ "/branding" ]
 
