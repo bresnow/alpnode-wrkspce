@@ -1,7 +1,7 @@
 {
   "address": "0.0.0.0",
   "log": "stdout",
-  "database": "/opt/filebrowser_db/database.db",
+  "database": "/opt/filebrowser/database.db",
   "allowEdit": true,
   "allowNew": true,
   "allowCommands": true,

@@ -58,26 +58,35 @@ services:
                 #   #-------------------NEW SERVICE
         - traefik.http.routers.${APP_NAME1:-cnxt-app}.rule=Host(`${APP_DOMAIN:-dev.cnxt.app}`)
         - traefik.http.routers.${APP_NAME1:-cnxt-app}.entrypoints=http
-        - traefik.http.routers.${APP_NAME1:-cnxt-app}.middlewares=https-redirect
-        - traefik.http.routers.${APP_NAME1:-cnxt-app}-https.rule=Host(`${APP_DOMAIN:-dev.cnxt.app}`)
-        - traefik.http.routers.${APP_NAME1:-cnxt-app}-https.entrypoints=https
-        - traefik.http.routers.${APP_NAME1:-cnxt-app}-https.service=${APP_NAME1:-cnxt-app}
-        - traefik.http.routers.${APP_NAME1:-cnxt-app}-https.tls=true
-        - traefik.http.routers.${APP_NAME1:-cnxt-app}-https.tls.certresolver=le
+        # - traefik.http.routers.${APP_NAME1:-cnxt-app}.middlewares=https-redirect
+        # - traefik.http.routers.${APP_NAME1:-cnxt-app}-https.rule=Host(`${APP_DOMAIN:-dev.cnxt.app}`)
+        # - traefik.http.routers.${APP_NAME1:-cnxt-app}-https.entrypoints=https
+        - traefik.http.routers.${APP_NAME1:-cnxt-app}.service=${APP_NAME1:-cnxt-app}
+        # - traefik.http.routers.${APP_NAME1:-cnxt-app}-https.tls=true
+        # - traefik.http.routers.${APP_NAME1:-cnxt-app}-https.tls.certresolver=le
         - traefik.http.services.${APP_NAME1:-cnxt-app}.loadbalancer.server.port=3369
         # - traefik.http.routers.${APP_NAME:-cnxt-app}.middlewares=admin-auth
       
     networks:
       - traefik-public
-      - cnxt-service-peer
+      - cnxt-service
       #TODO:SERVICE NETWORKS
     volumes:
       - cnxt_dev:/home
       - code_extensions:/opt/vscode/extensions
-      - filebrowser_db:/opt/filebrowser_db
+      - filebrowser_db:/opt/filebrowser
     environment:
       - PROXY_DOMAIN=${CODESERVER_DOMAIN:-sys.code.cnxt.app}
       # - HASHED_PASSWORD=$apr1$WdaKPtmY$3Jl85XnrnYNb9V1ksHPZb. 
+  appjack:
+    image: bresnow/alpnode_code_workspace:${VERSION:-latest}
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+    networks:
+      - cnxt-service
+ 
 volumes:
   filebrowser_db:
     driver: local-persist
@@ -94,4 +103,6 @@ volumes:
 
 networks:
   traefik-public:
+    external: true
+  cnxt-service:
     external: true

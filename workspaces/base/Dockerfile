@@ -1,9 +1,6 @@
 
 ARG NODE_VERSION=16
 FROM mhart/alpine-node:${NODE_VERSION}
-# default passwd = "admin"
-ENV HASHED_PASSWORD=$apr1$a8qQev8c$pDHbsZlGx5.Eo2G6f59Ek1 
-ENV FILEBROWSER_PORT=8021
 ENV TTYD_PORT=8026
 ENV DIRECTORY=main
 # lazygit version
@@ -16,9 +13,9 @@ ENV TV=1.7.1
 COPY unified-supervisord.conf supervisord.conf /etc/supervisord/
 COPY zsh-in-docker.sh /tmp/zsh-in-docker.sh
 COPY filebrowser.json /opt/filebrowser/database.json
-COPY database.db /opt/filebrowser_db/database.db
+COPY database.db /opt/filebrowser/database.db
 COPY branding /branding
-VOLUME [ "/branding" ]
+VOLUME [ "/branding","/opt/filebrowser" ]
 
 RUN apk upgrade --no-cache -U && \
     apk add --no-cache curl zip gzip tar py-pip python3 supervisor openrc vim git-flow git mc grep dmidecode htop 
