@@ -2,8 +2,10 @@ ARG docker_registry=docker.io/bresnow
 ARG image_tag=latest
 
 FROM ${docker_registry}/alpnode_base_workspace:${image_tag}
-# default passwd = "admin"
-ENV HASHED_PASSWORD="$apr1$a8qQev8c$pDHbsZlGx5.Eo2G6f59Ek1" 
+
+
+ENV HASHED_PASSWORD=""
+ENV CODESERVER_PORT="8025"
 COPY supervisord-codeserver.conf /etc/supervisord/
 COPY code-server-run.sh /opt/codeserver/code-server-run.sh 
 

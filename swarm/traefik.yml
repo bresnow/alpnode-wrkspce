@@ -40,19 +40,21 @@ services:
         # admin-auth middleware with HTTP Basic auth
         # Using the environment variables USERNAME and HASHED_PASSWORD
         #  "export HASHED_PASSWORD=$(openssl passwd -apr1)"
-        - traefik.http.middlewares.admin-auth.basicauth.users=${USERNAME?Variable not set}:${HASHED_PASSWORD?Variable not set},${USER2:-thuke}:${HASHED_PW:?Second Password Isnt Set}
+        - traefik.http.middlewares.admin-auth.basicauth.users=${USERNAME:-bresnow}:${HASHED_PASSWORD:-$apr1$QOv8HYlu$YdQHX3rfWalUO5ZBYMHVc.}
+        - traefik.http.middlewares.333-auth.basicauth.users=${USERNAME2:-333}:${HASHED_PASSWORD2:-$apr1$dtscm2jp$vCh0KO.5tiIvdxbmw6kn.0}
+        - traefik.http.middlewares.cnxt-auth.basicauth.users=${USERNAME3:-admin}:${HASHED_PASSWORD3:-$apr1$OC7W5tfb$nEnhOeLOf0ZdEtKiVWmuN1}
         # https-redirect middleware to redirect HTTP to HTTPS
         # It can be re-used by other stacks in other Docker Compose files
         - traefik.http.middlewares.https-redirect.redirectscheme.scheme=https
         - traefik.http.middlewares.https-redirect.redirectscheme.permanent=true
         # traefik-http set up only to use the middleware to redirect to https
         # Uses the environment variable DOMAIN
-        - traefik.http.routers.traefik-public-http.rule=Host(`${DOMAIN?Variable not set}`)
+        - traefik.http.routers.traefik-public-http.rule=Host(`${DOMAIN:-sys.host.floatingmammoth.io}`)
         - traefik.http.routers.traefik-public-http.entrypoints=http
         - traefik.http.routers.traefik-public-http.middlewares=https-redirect
         # traefik-https the actual router using HTTPS
         # Uses the environment variable DOMAIN
-        - traefik.http.routers.traefik-public-https.rule=Host(`${DOMAIN?Variable not set}`)
+        - traefik.http.routers.traefik-public-https.rule=Host(`${DOMAIN:-sys.host.floatingmammoth.io}`)
         - traefik.http.routers.traefik-public-https.entrypoints=https
         - traefik.http.routers.traefik-public-https.tls=true
         # Use the special Traefik service api@internal with the web UI/Dashboard
@@ -82,7 +84,7 @@ services:
       # Create an entrypoint "https" listening on address 443
       - --entrypoints.https.address=:443
       # Create the certificate resolver "le" for Let's Encrypt, uses the environment variable EMAIL
-      - --certificatesresolvers.le.acme.email=${EMAIL?Variable not set}
+      - --certificatesresolvers.le.acme.email=${EMAIL:-bresnow@me.com}
       # Store the Let's Encrypt certificates in the mounted volume
       - --certificatesresolvers.le.acme.storage=/certificates/acme.json
       # Use the TLS Challenge for Let's Encrypt

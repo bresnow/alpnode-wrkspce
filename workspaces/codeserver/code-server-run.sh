@@ -1,11 +1,11 @@
 #!/usr/bin/bash
 
-# if [ -n "${PASSWORD}" ] || [ -n "${HASHED_PASSWORD}" ]; then
-#     AUTH="password"
-# else
-#     AUTH="none"
-#     echo "starting with no password"
-# fi
+if [ -z "${PASSWORD}" ] || [ -z "${HASHED_PASSWORD}" ]; then
+    AUTH="none"
+    echo "starting with no password"
+else
+    AUTH="password"
+fi
 
 if [ -z ${PROXY_DOMAIN+x} ]; then
     PROXY_DOMAIN_ARG=""
@@ -16,10 +16,10 @@ fi
 export SHELL=/bin/zsh 
 
 code-server \
-    --bind-addr 0.0.0.0:8025 \
+    --bind-addr 0.0.0.0:${CODESERVER_PORT} \
     --user-data-dir /opt/vscode/data \
     --extensions-dir /opt/vscode/extensions \
     --disable-telemetry \
-    --auth "none" \
+    --auth ${AUTH} \
     "${PROXY_DOMAIN_ARG}" \
     ${HOME}

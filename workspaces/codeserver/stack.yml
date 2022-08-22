@@ -5,6 +5,8 @@ services:
     image: bresnow/alpnode_code_workspace:latest
     ports:
       - 8021:8021
+      - 8026:8026
+      - 8025:8025
     deploy:
       placement:
         constraints:
@@ -13,7 +15,7 @@ services:
         - traefik.enable=true
         - traefik.docker.network=traefik-public
         - traefik.constraint-label=traefik-public
-                #-------------------Code-Server
+        - traefik.http.middlewares.authorization-${VERSION:-1}.basicauth.users=${USERNAME3:-admin}:${HASHED_PASSWORD3:-$apr1$OC7W5tfb$nEnhOeLOf0ZdEtKiVWmuN1}                #-------------------Code-Server
         - traefik.http.routers.codeserver-cnxt.rule=Host(`${CODESERVER_DOMAIN:-sys.code.cnxt.app}`)
         - traefik.http.routers.codeserver-cnxt.entrypoints=http
         - traefik.http.routers.codeserver-cnxt.middlewares=https-redirect
@@ -23,7 +25,7 @@ services:
         - traefik.http.routers.codeserver-cnxt-https.tls=true
         - traefik.http.routers.codeserver-cnxt-https.tls.certresolver=le
         - traefik.http.services.codeserver-cnxt.loadbalancer.server.port=8025
-        # - traefik.http.routers.codeserver.middlewares=admin-auth
+        - traefik.http.routers.codeserver.middlewares=authorization-${VERSION:-1}
         #-------------------WEB TERMINAL
         - traefik.http.routers.ttyd-cnxt.rule=Host(`${TTYD_DOMAIN:-sys.term.cnxt.app}`)
         - traefik.http.routers.ttyd-cnxt.entrypoints=http
@@ -34,7 +36,7 @@ services:
         - traefik.http.routers.ttyd-cnxt-https.tls=true
         - traefik.http.routers.ttyd-cnxt-https.tls.certresolver=le
         - traefik.http.services.ttyd-cnxt.loadbalancer.server.port=8026
-        # # # - traefik.http.routers.ttyd.middlewares=admin-auth
+        - traefik.http.routers.ttyd.middlewares=authorization-${VERSION:-1}
 
         #   #-------------------FILE SHARE
         - traefik.http.routers.filebrowser-cnxt.rule=Host(`${FILEBROWSER_DOMAIN:-sys.file.cnxt.app}`)
@@ -46,29 +48,45 @@ services:
         - traefik.http.routers.filebrowser-cnxt-https.tls=true
         - traefik.http.routers.filebrowser-cnxt-https.tls.certresolver=le
         - traefik.http.services.filebrowser-cnxt.loadbalancer.server.port=8021
-        # - traefik.http.routers.filebrowser.middlewares=admin-auth
 
+                #   #-------------------NEW SERVICE1
+        - traefik.http.routers.${APP_NAME:-dev}.rule=Host(`${APP_DOMAIN1:-sys.dev.cnxt.app}`)
+        - traefik.http.routers.${APP_NAME:-dev}.entrypoints=http
+        - traefik.http.routers.${APP_NAME:-dev}.middlewares=https-redirect
+        - traefik.http.routers.${APP_NAME:-dev}-https.rule=Host(`${APP_DOMAIN1:-sys.dev.cnxt.app}`)
+        - traefik.http.routers.${APP_NAME:-dev}-https.entrypoints=https
+        - traefik.http.routers.${APP_NAME:-dev}-https.service=${APP_NAME1:-dev-app}
+        - traefik.http.routers.${APP_NAME:-dev}-https.tls=true
+        - traefik.http.routers.${APP_NAME:-dev}-https.tls.certresolver=le
+        - traefik.http.services.${APP_NAME:-dev}.loadbalancer.server.port=3335
                 #   #-------------------NEW SERVICE
-        - traefik.http.routers.${APP_NAME:-cnxt-app}.rule=Host(`${APP_DOMAIN:-dev.cnxt.app}`)
-        - traefik.http.routers.${APP_NAME:-cnxt-app}.entrypoints=http
-        - traefik.http.routers.${APP_NAME:-cnxt-app}.middlewares=https-redirect
-        - traefik.http.routers.${APP_NAME:-cnxt-app}-https.rule=Host(`${APP_DOMAIN:-dev.cnxt.app}`)
-        - traefik.http.routers.${APP_NAME:-cnxt-app}-https.entrypoints=https
-        - traefik.http.routers.${APP_NAME:-cnxt-app}-https.service=${APP_NAME:-cnxt-app}
-        - traefik.http.routers.${APP_NAME:-cnxt-app}-https.tls=true
-        - traefik.http.routers.${APP_NAME:-cnxt-app}-https.tls.certresolver=le
-        - traefik.http.services.${APP_NAME:-cnxt-app}.loadbalancer.server.port=3369
+        - traefik.http.routers.${APP_NAME1:-cnxt-app}.rule=Host(`${APP_DOMAIN:-dev.cnxt.app}`)
+        - traefik.http.routers.${APP_NAME1:-cnxt-app}.entrypoints=http
+        - traefik.http.routers.${APP_NAME1:-cnxt-app}.middlewares=https-redirect
+        - traefik.http.routers.${APP_NAME1:-cnxt-app}-https.rule=Host(`${APP_DOMAIN:-dev.cnxt.app}`)
+        - traefik.http.routers.${APP_NAME1:-cnxt-app}-https.entrypoints=https
+        - traefik.http.routers.${APP_NAME1:-cnxt-app}-https.service=${APP_NAME:-cnxt-app}
+        - traefik.http.routers.${APP_NAME1:-cnxt-app}-https.tls=true
+        - traefik.http.routers.${APP_NAME1:-cnxt-app}-https.tls.certresolver=le
+        - traefik.http.services.${APP_NAME1:-cnxt-app}.loadbalancer.server.port=3369
         # - traefik.http.routers.${APP_NAME:-cnxt-app}.middlewares=admin-auth
       
     networks:
       - traefik-public
     volumes:
-      - codeserver_data:/home
+      - cnxt_dev:/home
+      - code_extensions:/opt/vscode/extensions
+    environment:
+      - PROXY_DOMAIN=${CODESERVER_DOMAIN:-sys.code.cnxt.app}
 volumes:
-  codeserver_data:
+  code_extensions:
     driver: local-persist
     driver_opts:
-      mountpoint: /home/bresnow/codeserver_data
+      mountpoint: ${HOME}/.vscode-server/extensions
+  cnxt_dev:
+    driver: local-persist
+    driver_opts:
+      mountpoint: ${HOME}/cnxt_dev
 
 networks:
   traefik-public:
